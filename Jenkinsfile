@@ -40,17 +40,17 @@ stage('Docker Test') {
         stage('Push Docker Image') {
     steps {
         withCredentials([
-            string(
+            usernamePassword(
                 credentialsId: 'dockerhub_credentials',
-                variable: 'DOCKER_PASS'
+                usernameVariable: 'DOCKER_USER',
+                passwordVariable: 'DOCKER_PASS'
             )
         ]) {
             withEnv([
                 "PATH+DOCKER=C:/Users/Sandhya L D/AppData/Local/Programs/DockerDesktop/resources/bin"
             ]) {
                 bat '''
-                    echo %DOCKER_PASS% | docker login --username sandhyald --password-stdin
-                    if errorlevel 1 exit /b 1
+                    powershell.exe -NoProfile -NonInteractive -Command "$env:DOCKER_PASS | docker login --username $env:DOCKER_USER --password-stdin; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }"
 
                     docker push sandhyald/exp5mca:latest
                 '''
@@ -58,7 +58,6 @@ stage('Docker Test') {
         }
     }
 }
-    }
     post {
         success {
             echo 'Pipeline executed successfully!'
