@@ -38,21 +38,26 @@ stage('Docker Test') {
     }
 }
         stage('Push Docker Image') {
-            steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'dockerhub_credentials',
-                        usernameVariable: 'DOCKER_USER',
-                        passwordVariable: 'DOCKER_PASS'
-                    )
-                ]) {
-                    bat 'docker login -u %DOCKER_USER% -p %DOCKER_PASS%'
-                    bat 'docker push %DOCKER_IMAGE%:latest'
-                    bat 'docker logout'
-                }
+    steps {
+        withCredentials([
+            string(
+                credentialsId: 'dockerhub_credentials',
+                variable: 'DOCKER_PASS'
+            )
+        ]) {
+            withEnv([
+                "PATH+DOCKER=C:/Users/Sandhya L D/AppData/Local/Programs/DockerDesktop/resources/bin"
+            ]) {
+                bat '''
+                    echo %DOCKER_PASS% | docker login --username sandhyald --password-stdin
+                    if errorlevel 1 exit /b 1
+
+                    docker push sandhyald/exp5mca:latest
+                '''
             }
         }
     }
+}
 
     post {
         success {
