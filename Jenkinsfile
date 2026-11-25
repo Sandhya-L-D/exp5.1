@@ -58,7 +58,7 @@ stage('Docker Test') {
         }
     }
 }
-
+    }
     post {
         success {
             echo 'Pipeline executed successfully!'
