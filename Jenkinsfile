@@ -21,23 +21,22 @@ pipeline {
         }
 stage('Docker Test') {
     steps {
-        echo 'Testing Docker from Jenkins...'
-
-        bat 'whoami'
-
-        bat 'dir "C:/Users/Sandhya L D/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe"'
-
-        bat '"C:/Users/Sandhya L D/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe" --version'
-
-        bat '"C:/Users/Sandhya L D/AppData/Local/Programs/DockerDesktop/resources/bin/docker.exe" info'
+        withEnv(["PATH+DOCKER=C:/Users/Sandhya L D/AppData/Local/Programs/DockerDesktop/resources/bin"]) {
+            echo 'Testing Docker...'
+            bat 'whoami'
+            bat 'where docker'
+            bat 'docker --version'
+            bat 'docker info'
+        }
     }
 }
         stage('Build Docker Image') {
-            steps {
-                bat 'docker build -t %DOCKER_IMAGE%:latest .'
-            }
+    steps {
+        withEnv(["PATH+DOCKER=C:/Users/Sandhya L D/AppData/Local/Programs/DockerDesktop/resources/bin"]) {
+            bat 'docker build -t sandhyald/exp5mca:latest .'
         }
-
+    }
+}
         stage('Push Docker Image') {
             steps {
                 withCredentials([
