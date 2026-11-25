@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+    PATH+DOCKER = 'C:/Users/Sandhya L D/AppData/Local/Programs/DockerDesktop/resources/bin'
+}
 
     environment {
         DOCKER_IMAGE = 'sandhyald/exp5mca'
